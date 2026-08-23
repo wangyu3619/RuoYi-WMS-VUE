@@ -1,5 +1,5 @@
 <template>
-  <div class="user-info-head" @click="editCropper()">
+  <div class="user-info-head">
     <img :src="options.img" title="点击上传头像" class="img-circle img-lg" />
     <el-dialog :title="title" v-model="open" width="800px" append-to-body @opened="modalOpened" @close="closeDialog">
       <el-row>

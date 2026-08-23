@@ -1,7 +1,7 @@
 {
-  "name": "ruoyi-wms",
+  "name": "智源云动-wms",
   "version": "4.8.2",
-  "description": "ruoyi-wms后台管理系统",
+  "description": "智源云动-wms后台管理系统",
   "author": "ZCC",
   "license": "MIT",
   "scripts": {
@@ -9,10 +9,7 @@
     "build:prod": "vite build",
     "preview": "vite preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://gitee.com/zccbbg/ruoyi-wms-vue.git"
-  },
+
   "dependencies": {
     "@element-plus/icons-vue": "2.0.10",
     "@vueup/vue-quill": "1.2.0",

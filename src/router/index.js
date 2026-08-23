@@ -57,45 +57,45 @@ export const constantRoutes = [
     component: () => import('@/views/error/401'),
     hidden: true
   },
-  {
-    path: '',
-    component: Layout,
-    redirect: '/index',
-    children: [
-      {
-        path: '/index',
-        component: () => import('@/views/dashboard/charts'),
-        name: 'Index',
-        meta: { title: '首页', icon: 'redis', affix: true }
-      }
-    ]
-  },
-  {
-    path: '',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [
-      {
-        path: '/dashboard',
-        component: () => import('@/views/dashboard/dashboard'),
-        name: 'Dashboard',
-        meta: { title: '数据大屏', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
-    path: '',
-    component: Layout,
-    redirect: '/description',
-    children: [
-      {
-        path: '/description',
-        component: () => import('@/views/index'),
-        name: 'Description',
-        meta: { title: '项目介绍', icon: 'button', affix: true }
-      }
-    ]
-  },
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   redirect: '/index',
+  //   children: [
+  //     {
+  //       path: '/index',
+  //       component: () => import('@/views/dashboard/charts'),
+  //       name: 'Index',
+  //       meta: { title: '首页', icon: 'redis', affix: true }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   redirect: '/dashboard',
+  //   children: [
+  //     {
+  //       path: '/dashboard',
+  //       component: () => import('@/views/dashboard/dashboard'),
+  //       name: 'Dashboard',
+  //       meta: { title: '数据大屏', icon: 'dashboard', affix: true }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   redirect: '/description',
+  //   children: [
+  //     {
+  //       path: '/description',
+  //       component: () => import('@/views/index'),
+  //       name: 'Description',
+  //       meta: { title: '项目介绍', icon: 'button', affix: true }
+  //     }
+  //   ]
+  // },
   {
     path: '/system/dashboard',
     component: () => import('@/views/dashboard/dashboard'),
