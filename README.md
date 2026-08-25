@@ -32,6 +32,21 @@ npm run dev
 # 前端访问地址 http://localhost:80
 ```
 
+## Windows Electron 打包
+
+```bash
+# 安装依赖
+npm install
+
+# 生成 Windows 安装包和免安装版 exe
+npm run electron:build
+```
+
+打包产物位于 `release/`。远端后端接口地址在 `.env.electron` 的
+`VITE_APP_BASE_API` 中配置，修改后重新执行 `npm run electron:build` 即可。
+打包脚本默认从 Electron 国内镜像下载运行时，并使用 Electron 包内的官方校验和验证完整性；
+如需使用其他镜像，可提前设置 `ELECTRON_MIRROR`。
+
 ## 演示图
 ![首页](docs/首页.png)
 ![大屏](docs/大屏.png)

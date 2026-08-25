@@ -48,28 +48,28 @@
           </el-table-column>
           <el-table-column label="商品信息" prop="warehouseIdAndItemId">
             <template #default="{ row }">
-              <div>{{ row.item.itemName }}</div>
-              <div v-if="row.item.itemCode">商品编号：{{ row.item.itemCode }}</div>
+              <div>{{ row.item?.itemName }}</div>
+              <div v-if="row.item?.itemCode">商品编号：{{ row.item.itemCode }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="规格信息" :prop="skuId">
+          <el-table-column label="规格信息" prop="skuId">
             <template #default="{ row }">
-              <div>{{ row.itemSku.skuName }}</div>
-              <div v-if="row.itemSku.skuCode">规格编号：{{ row.itemSku.skuCode }}</div>
+              <div>{{ row.itemSku?.skuName }}</div>
+              <div v-if="row.itemSku?.skuCode">规格编号：{{ row.itemSku.skuCode }}</div>
             </template>
           </el-table-column>
         </template>
         <template v-else>
           <el-table-column label="商品信息" prop="itemId">
             <template #default="{ row }">
-              <div>{{ row.item.itemName }}</div>
-              <div v-if="row.item.itemCode">商品编号：{{ row.item.itemCode }}</div>
+              <div>{{ row.item?.itemName }}</div>
+              <div v-if="row.item?.itemCode">商品编号：{{ row.item.itemCode }}</div>
             </template>
           </el-table-column>
           <el-table-column label="规格信息" prop="skuId">
             <template #default="{ row }">
-              <div>{{ row.itemSku.skuName }}</div>
-              <div v-if="row.itemSku.skuCode">规格编号：{{ row.itemSku.skuCode }}</div>
+              <div>{{ row.itemSku?.skuName }}</div>
+              <div v-if="row.itemSku?.skuCode">规格编号：{{ row.itemSku.skuCode }}</div>
             </template>
           </el-table-column>
           <el-table-column label="仓库" prop="skuIdAndWarehouseId">
@@ -138,18 +138,22 @@ const getList = async () => {
     query.minQuantity = undefined
   }
   loading.value = true;
-  const res = await listInventoryBoard(query,queryType.value);
-  inventoryList.value = res.rows;
-  inventoryList.value.forEach(it => {
-    if (queryType.value == "warehouse") {
-      it.warehouseIdAndItemId = it.warehouseId + '-' + it.item.id
-    } else if (queryType.value == "item") {
-      it.itemId = it.item.id
-      it.skuIdAndWarehouseId = it.skuId + '-' + it.warehouseId
-    }
-  })
-  total.value = res.total;
-  loading.value = false;
+  try {
+    const res = await listInventoryBoard(query, queryType.value);
+    inventoryList.value = Array.isArray(res.rows) ? res.rows : [];
+    inventoryList.value.forEach(it => {
+      const itemId = it.item?.id ?? it.itemId
+      if (queryType.value == "warehouse") {
+        it.warehouseIdAndItemId = it.warehouseId + '-' + itemId
+      } else if (queryType.value == "item") {
+        it.itemId = itemId
+        it.skuIdAndWarehouseId = it.skuId + '-' + it.warehouseId
+      }
+    })
+    total.value = Number(res.total) || 0;
+  } finally {
+    loading.value = false;
+  }
 }
 
 /** 搜索按钮操作 */

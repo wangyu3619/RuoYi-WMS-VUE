@@ -1,4 +1,4 @@
-import { createWebHistory, createRouter } from 'vue-router'
+import { createWebHashHistory, createWebHistory, createRouter } from 'vue-router'
 /* Layout */
 import Layout from '@/layout'
 
@@ -48,6 +48,20 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/',
+    component: Layout,
+    redirect: '/inventory',
+    hidden: true,
+    children: [
+      {
+        path: 'inventory',
+        component: () => import('@/views/wms/inventory/statistic'),
+        name: 'InventoryHome',
+        meta: { title: '库存统计', icon: 'chart', noCache: true }
+      }
+    ]
+  },
+  {
     path: "/:pathMatch(.*)*",
     component: () => import('@/views/error/404'),
     hidden: true
@@ -73,19 +87,6 @@ export const constantRoutes = [
   // {
   //   path: '',
   //   component: Layout,
-  //   redirect: '/dashboard',
-  //   children: [
-  //     {
-  //       path: '/dashboard',
-  //       component: () => import('@/views/dashboard/dashboard'),
-  //       name: 'Dashboard',
-  //       meta: { title: '数据大屏', icon: 'dashboard', affix: true }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '',
-  //   component: Layout,
   //   redirect: '/description',
   //   children: [
   //     {
@@ -96,11 +97,6 @@ export const constantRoutes = [
   //     }
   //   ]
   // },
-  {
-    path: '/system/dashboard',
-    component: () => import('@/views/dashboard/dashboard'),
-    hidden: true
-  },
   {
     path: '/user',
     component: Layout,
@@ -160,39 +156,13 @@ export const dynamicRoutes = [
         meta: { title: '字典数据', activeMenu: '/system/dict' }
       }
     ]
-  },
-  {
-    path: '/system/oss-config',
-    component: Layout,
-    hidden: true,
-    permissions: ['system:oss:list'],
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/system/oss/config'),
-        name: 'OssConfig',
-        meta: { title: '配置管理', activeMenu: '/system/oss'}
-      }
-    ]
-  },
-  {
-    path: '/tool/gen-edit',
-    component: Layout,
-    hidden: true,
-    permissions: ['tool:gen:edit'],
-    children: [
-      {
-        path: 'index/:tableId(\\d+)',
-        component: () => import('@/views/tool/gen/editTable'),
-        name: 'GenEdit',
-        meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
-      }
-    ]
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.VITE_APP_CONTEXT_PATH),
+  history: import.meta.env.VITE_APP_ENV === 'electron'
+    ? createWebHashHistory()
+    : createWebHistory(import.meta.env.VITE_APP_CONTEXT_PATH),
   routes: constantRoutes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {

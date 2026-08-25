@@ -70,7 +70,9 @@ function logout() {
     type: 'warning'
   }).then(() => {
     userStore.logOut().then(() => {
-      location.href = import.meta.env.VITE_APP_CONTEXT_PATH + 'index';
+      location.href = import.meta.env.VITE_APP_ENV === 'electron'
+        ? '#/login'
+        : import.meta.env.VITE_APP_CONTEXT_PATH + 'index';
     })
   }).catch(() => { });
 }

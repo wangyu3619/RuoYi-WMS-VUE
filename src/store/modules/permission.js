@@ -5,8 +5,23 @@ import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView'
 import InnerLink from '@/layout/components/InnerLink'
 
-// 匹配views里面所有的.vue文件
-const modules = import.meta.glob('./../../views/**/*.vue')
+// 匹配views里面所有可用的.vue文件
+const modules = import.meta.glob([
+  './../../views/**/*.vue',
+  '!./../../views/dashboard/dashboard.vue',
+  '!./../../views/dashboard/components/dashboard/*.vue',
+  '!./../../views/system/oss/*.vue',
+  '!./../../views/tool/gen/*.vue'
+])
+
+// 当前前端不提供文件管理和代码生成功能
+const excludedRouteComponents = new Set([
+  'dashboard/dashboard',
+  'system/oss/index',
+  'system/oss/config',
+  'tool/gen/index',
+  'tool/gen/editTable'
+])
 
 const usePermissionStore = defineStore(
   'permission',
@@ -33,12 +48,13 @@ const usePermissionStore = defineStore(
         this.sidebarRouters = routes
       },
       generateRoutes(roles) {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
           // 向后端请求路由数据
           getRouters().then(res => {
-            const sdata = JSON.parse(JSON.stringify(res.data))
-            const rdata = JSON.parse(JSON.stringify(res.data))
-            const defaultData = JSON.parse(JSON.stringify(res.data))
+            const availableRoutes = filterExcludedRoutes(res.data)
+            const sdata = JSON.parse(JSON.stringify(availableRoutes))
+            const rdata = JSON.parse(JSON.stringify(availableRoutes))
+            const defaultData = JSON.parse(JSON.stringify(availableRoutes))
             const sidebarRoutes = filterAsyncRouter(sdata)
             const rewriteRoutes = filterAsyncRouter(rdata, false, true)
             const defaultRoutes = filterAsyncRouter(defaultData)
@@ -49,11 +65,23 @@ const usePermissionStore = defineStore(
             this.setDefaultRoutes(sidebarRoutes)
             this.setTopbarRoutes(defaultRoutes)
             resolve(rewriteRoutes)
-          })
+          }).catch(reject)
         })
       }
     }
   })
+
+// 递归过滤后端返回的菜单，避免入口隐藏后仍被注册为可访问路由
+function filterExcludedRoutes(routes = []) {
+  return routes
+    .filter(route => !excludedRouteComponents.has(route.component))
+    .map(route => ({
+      ...route,
+      ...(Array.isArray(route.children)
+        ? { children: filterExcludedRoutes(route.children) }
+        : {})
+    }))
+}
 
 // 遍历后台传来的路由字符串，转换为组件对象
 function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
