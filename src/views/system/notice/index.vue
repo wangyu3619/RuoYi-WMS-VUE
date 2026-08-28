@@ -142,6 +142,12 @@
                   </el-form-item>
                </el-col>
                <el-col :span="24">
+                  <el-form-item label="短信通知">
+                     <el-checkbox v-model="form.smsFlag">同时下发短信</el-checkbox>
+                     <span style="color:#909399;font-size:12px;margin-left:8px">通过中国移动云MAS短信平台下发会议通知至用户手机</span>
+                  </el-form-item>
+               </el-col>
+               <el-col :span="24">
                   <el-form-item label="内容">
                     <editor v-model="form.noticeContent" :min-height="192"/>
                   </el-form-item>
@@ -212,7 +218,8 @@ function reset() {
     noticeTitle: undefined,
     noticeType: undefined,
     noticeContent: undefined,
-    status: "1"
+    status: "1",
+    smsFlag: false
   };
   proxy.resetForm("noticeRef");
 }
